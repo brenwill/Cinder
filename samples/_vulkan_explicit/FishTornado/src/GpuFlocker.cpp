@@ -54,7 +54,8 @@
 
 #include <boost/algorithm/string.hpp>
 
-int FBO_RES = 96;	// squared = number of fish
+//int FBO_RES = 96;	// squared = number of fish
+int FBO_RES = 50;	// squared = number of fish
 
 using namespace ci;
 using namespace ci::app;

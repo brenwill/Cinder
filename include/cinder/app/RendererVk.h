@@ -140,6 +140,13 @@ class RendererVk : public Renderer {
 	virtual HWND		getHwnd() override { return mWnd; }
 	virtual void		setup( HWND wnd, HDC dc, RendererRef sharedRenderer ) override;
 	virtual void		kill() override;
+#elif defined( CINDER_COCOA )
+    #if defined( CINDER_MAC )
+        void						setup( CGRect frame, NSView *cinderView, RendererRef sharedRenderer, bool retinaEnabled ) override;
+    #elif defined( CINDER_COCOA_TOUCH )
+        void						setup( const Area &frame, UIView *cinderView, RendererRef sharedRenderer ) override;
+    #endif
+	virtual bool		isMetalLayer() const override { return true; }
 #endif
 
 	bool				isExplicitMode() const { return mOptions.getExplicitMode(); }
@@ -163,6 +170,8 @@ class RendererVk : public Renderer {
 	GLFWwindow			*mWindow = nullptr;  	
 #elif defined( CINDER_MSW )
 	HWND				mWnd = nullptr;
+#elif defined( CINDER_COCOA )
+	void*				mView = nullptr;
 #endif
 	
 	RendererVk::Options	mOptions;

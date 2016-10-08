@@ -54,7 +54,7 @@
 
 namespace cinder { namespace vk {
 
-#if defined( CINDER_ANDROID )
+#if defined( CINDER_ANDROID ) || defined( CINDER_COCOA )
 	static pthread_key_t sThreadSpecificCurrentContextKey;
 	static bool sThreadSpecificCurrentContextInitialized = false;
 #elif defined( CINDER_LINUX )
@@ -221,7 +221,7 @@ void Context::destroy( bool removeFromTracking )
 Context* Context::getCurrent()
 {
 	Context *result = nullptr;
-#if defined( CINDER_ANDROID )
+#if defined( CINDER_ANDROID ) || defined( CINDER_COCOA )
 	if( sThreadSpecificCurrentContextInitialized ) {
 		result = reinterpret_cast<Context*>( pthread_getspecific( sThreadSpecificCurrentContextKey ) );
 	}
@@ -233,7 +233,7 @@ Context* Context::getCurrent()
 
 void Context::makeCurrent()
 {
-	#if defined( CINDER_ANDROID )
+	#if defined( CINDER_ANDROID ) || defined( CINDER_COCOA )
 	if( ! sThreadSpecificCurrentContextInitialized ) {
 		pthread_key_create( &sThreadSpecificCurrentContextKey, NULL );
 		sThreadSpecificCurrentContextInitialized = true;

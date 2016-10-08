@@ -40,8 +40,10 @@
 #include "cinder/Color.h"
 #include "cinder/Vector.h"
 
+#define MULTISAMPLE
 #define THREADED_LOAD
-#define COMPRESSED_TEXTURES
+//#define COMPRESSED_TEXTURES
+
 
 extern float		DEFAULT_CAM_DIST;
 extern float		CAM_DIST_MIN;

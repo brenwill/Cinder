@@ -59,6 +59,7 @@
 	BOOL						mReceivesEvents;
 	BOOL						mHighDensityDisplayEnabled;
 	BOOL						mMultiTouchEnabled;
+	BOOL						mUseMetal;
 	cinder::app::RendererRef	mRenderer;
 	
 	float						mContentScaleFactor;

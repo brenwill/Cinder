@@ -33,24 +33,30 @@ using namespace cinder::app;
 
 // Set in initWithFrame based on the renderer
 static bool sIsEaglLayer;
+static bool sIsMetalLayer;
 
 + (Class)layerClass
 {
+	if( sIsMetalLayer )
+		return [CAMetalLayer class];
+
 	if( sIsEaglLayer )
 		return [CAEAGLLayer class];
-	else
-		return [CALayer class];
+
+	return [CALayer class];
 }
 
 - (CinderViewCocoaTouch *)initWithFrame:(CGRect)frame app:(AppCocoaTouch *)app renderer:(RendererRef)renderer sharedRenderer:(RendererRef)sharedRenderer
 {
 	// This needs to get setup immediately as +layerClass will be called when the view is initialized
 	sIsEaglLayer = renderer->isEaglLayer();
-	
+	sIsMetalLayer = renderer->isMetalLayer();
+
 	if( (self = [super initWithFrame:frame]) ) {
 		mApp = app;
 		mRenderer = renderer;
 
+		self.backgroundColor = [UIColor redColor];
 		renderer->setup( cocoa::CgRectToArea( frame ), self, sharedRenderer );
 		
 		self.multipleTouchEnabled = mApp->isMultiTouchEnabled();
@@ -92,7 +98,7 @@ static bool sIsEaglLayer;
 
 - (void)drawView
 {
-	if( sIsEaglLayer ) {
+	if( sIsEaglLayer || sIsMetalLayer ) {
 		mRenderer->startDraw();
 		[mDelegate draw];
 		mRenderer->finishDraw();

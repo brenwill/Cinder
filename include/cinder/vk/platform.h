@@ -46,10 +46,20 @@
 	#define VK_USE_PLATFORM_XCB_KHR
 #elif defined( CINDER_MSW )
 	#define VK_USE_PLATFORM_WIN32_KHR
+#elif defined( CINDER_MAC )
+    #define VK_USE_PLATFORM_MACOS_MVK
+#elif defined( CINDER_COCOA_TOUCH )
+    #define VK_USE_PLATFORM_IOS_MVK
 #endif
 
 #define VK_PROTOTYPES
 #include <vulkan/vulkan.h>
+
+#if defined( VK_USE_PLATFORM_MACOS_MVK )
+	#include <MoltenVK/vk_mvk_macos_surface.h>
+#elif defined( VK_USE_PLATFORM_IOS_MVK )
+	#include <MoltenVK/vk_mvk_ios_surface.h>
+#endif
 
 #if defined( NDEBUG ) && defined( __GNUC__ )
 	#define U_ASSERT_ONLY __attribute__((unused))
@@ -81,6 +91,11 @@ struct PlatformWindow {
 	::HINSTANCE connection = nullptr;
 	::HWND window = nullptr;
 	PlatformWindow() {}
+};
+#elif defined( CINDER_COCOA )
+struct PlatformWindow {
+    void* view = nullptr;
+    PlatformWindow() {}
 };
 #endif
 

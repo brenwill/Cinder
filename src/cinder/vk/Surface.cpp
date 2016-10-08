@@ -78,6 +78,20 @@ void Surface::initialize()
     createInfo.hinstance	= mPlatformWindow.connection;
     createInfo.hwnd			= mPlatformWindow.window;
     res = vkCreateWin32SurfaceKHR( mDevice->getEnv()->getVulkanInstance(), &createInfo, nullptr, &mSurface );
+#elif defined(VK_USE_PLATFORM_MACOS_MVK)
+	VkMacOSSurfaceCreateInfoMVK createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
+	createInfo.pNext = NULL;
+	createInfo.flags = 0;
+	createInfo.pView = mPlatformWindow.view;
+	res = vkCreateMacOSSurfaceMVK( mDevice->getEnv()->getVulkanInstance(), &createInfo, NULL, &mSurface );
+#elif defined(VK_USE_PLATFORM_IOS_MVK)
+	VkIOSSurfaceCreateInfoMVK createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK;
+	createInfo.pNext = NULL;
+	createInfo.flags = 0;
+	createInfo.pView = mPlatformWindow.view;
+	res = vkCreateIOSSurfaceMVK( mDevice->getEnv()->getVulkanInstance(), &createInfo, NULL, &mSurface );
 #endif // _WIN32
     assert( res == VK_SUCCESS );
 

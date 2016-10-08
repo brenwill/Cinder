@@ -59,6 +59,16 @@
 
 #include <boost/algorithm/string.hpp>
 
+#if defined( CINDER_COCOA ) && ( ! defined( __OBJC__ ) )
+	#error "This file must be compiled as Objective-C++ on the Mac"
+#endif
+
+#if defined( CINDER_MAC )
+	#import <AppKit/NSView.h>
+#elif defined( CINDER_COCOA_TOUCH )
+	#import <UIKit/UIView.h>
+#endif
+
 namespace cinder { namespace app {
 
 // -------------------------------------------------------------------------------------------------
@@ -276,6 +286,24 @@ void RendererVk::kill()
 
 	vk::Environment::destroyVulkan();
 }
+#elif defined( CINDER_MAC )
+void RendererVk::setup( CGRect frame, NSView *cinderView, RendererRef sharedRenderer, bool retinaEnabled )
+{
+	mView = cinderView;
+    const ivec2 windowSize = ivec2( frame.size.width, frame.size.height );
+    vk::PlatformWindow platformWindow = {};
+    platformWindow.view = cinderView;
+    setupVulkan( windowSize, platformWindow );
+}
+#elif defined( CINDER_COCOA_TOUCH )
+void RendererVk::setup( const Area &frame, UIView *cinderView, RendererRef sharedRenderer )
+{
+	mView = cinderView;
+    const ivec2 windowSize = ivec2( frame.getWidth(), frame.getHeight() );
+    vk::PlatformWindow platformWindow = {};
+    platformWindow.view = cinderView;
+    setupVulkan( windowSize, platformWindow );
+}
 #endif
 
 Surface8u RendererVk::copyWindowSurface( const Area &area, int32_t windowHeightPixels )
@@ -386,6 +414,16 @@ void RendererVk::defaultResize()
 	::GetClientRect( mWnd, &clientRect );
 	int width = clientRect.right - clientRect.left;
 	int height = clientRect.bottom - clientRect.top;
+#elif defined( CINDER_MAC )
+	NSView* nsView = (NSView*)mView;
+	NSRect vRect = [nsView bounds];
+	int width = vRect.size.width;
+	int height = vRect.size.height;
+#elif defined( CINDER_COCOA_TOUCH )
+	UIView* uiView = (UIView*)mView;
+	CGRect vRect = [uiView bounds];
+	int width = vRect.size.width;
+	int height = vRect.size.height;
 #endif
 
 	//if( ! isExplicitMode() ) 

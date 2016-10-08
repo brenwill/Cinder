@@ -520,6 +520,9 @@ static bool glslToSpv( const VkShaderStageFlagBits shader_type, const char *psha
 
     glslang::GlslangToSpv(*program.getIntermediate(stage), spirv);
 
+	delete shader;
+	delete &program;
+
     return true;
 }
 

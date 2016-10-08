@@ -28,6 +28,7 @@
 #include "cinder/cocoa/CinderCocoa.h"
 
 #import <Cocoa/Cocoa.h>
+#import <QuartzCore/QuartzCore.h>
 
 using namespace cinder;
 using namespace cinder::app;
@@ -54,7 +55,20 @@ using namespace cinder::app;
 	mTouchIdMap = nil;
 	mDelegate = nil;
 
+	mUseMetal = NO;
+
 	return self;
+}
+
+// Indicates that the view wants to draw using the backing layer instead of using drawRect.
+-(BOOL) wantsUpdateLayer { return mUseMetal; }
+
+// If the wantsLayer property is set to YES, this method will be invoked to return a layer instance.
+-(CALayer *) makeBackingLayer {
+	CALayer * layer = [(mUseMetal ? [CAMetalLayer class] : [CALayer class]) layer];
+	CGSize viewScale = [self convertSizeToBacking: CGSizeMake( 1.0f, 1.0f )];
+	layer.contentsScale = MIN( viewScale.width, viewScale.height );
+	return layer;
 }
 
 - (CinderViewMac *)initWithFrame:(NSRect)frame renderer:(RendererRef)renderer sharedRenderer:(RendererRef)sharedRenderer
@@ -62,6 +76,7 @@ using namespace cinder::app;
 {
 	self = [super initWithFrame:frame];
 	mRenderer = renderer;
+	mUseMetal = renderer->isMetalLayer();
 	mReadyToDraw = NO;
 	mFullScreen = NO;
 	mReceivesEvents = appReceivesEvents;
@@ -70,6 +85,8 @@ using namespace cinder::app;
 
 	mTouchIdMap = nil;
 	mDelegate = nil;
+
+	self.wantsLayer = mUseMetal;	// Back the view with a layer created by the makeBackingLayer method.
 
 	[self setupRendererWithFrame:frame renderer:renderer sharedRenderer:sharedRenderer];
 	

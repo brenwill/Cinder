@@ -80,7 +80,9 @@ private:
 	void					drawToDepthFbo( const ci::vk::CommandBufferRef& cmdBuf );
 
 	void					generateCommandBuffer( const ci::vk::CommandBufferRef& cmdBuf );
-	
+
+    cinder::ivec2           mWinSize;
+
 	// Time
 	float					mTime;
 	float					mTimeElapsed;

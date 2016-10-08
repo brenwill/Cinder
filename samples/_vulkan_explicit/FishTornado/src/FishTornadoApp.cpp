@@ -54,6 +54,12 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+#if defined( MULTISAMPLE )
+    #define NUM_SAMPLES     VK_SAMPLE_COUNT_4_BIT
+#else
+    #define NUM_SAMPLES     VK_SAMPLE_COUNT_1_BIT
+#endif
+
 // The number of queues to request. May not get what's requested.
 #if defined( THREADED_LOAD )
 	#define NUM_ADDITIONAL_QUEUES 3
@@ -87,9 +93,15 @@ FishTornadoApp::~FishTornadoApp()
 
 void FishTornadoApp::setup()
 {
+
+    mWinSize = getWindowSize();
+#if defined( CINDER_COCOA_TOUCH )
+    mWinSize = ivec2(mWinSize.y, mWinSize.x);
+#endif
+
 	mCamera	= CameraPersp();
 	mCamera.setPerspective( 45.0f, getWindowAspectRatio(), 1.0f, 10000.0f );
-	mCamera.lookAt( vec3( 135.312f, 64.086f, -265.332f ), vec3( 0.0f, 100.0f, 0.0f ) );
+	mCamera.lookAt( vec3( 120.0f, 80.0f, -475.0f ), vec3( 30.0f, 100.0f, 0.0f ) );
 	mCamUi.setCamera( &mCamera );
 	
 	loadShaders();
@@ -275,43 +287,69 @@ void FishTornadoApp::setup()
 	*/
 #endif
 
-	try {
-		VkSampleCountFlagBits sampleCount = VK_SAMPLE_COUNT_8_BIT;
+    try {
+        VkSampleCountFlagBits sampleCount = NUM_SAMPLES;
 
-		// Textures
-		vk::Texture::Format texFormat = vk::Texture::Format( VK_FORMAT_R8G8B8A8_UNORM );
-		texFormat.setUsageColorAttachment();
-		mMainColorTex = vk::Texture::create( getWindowWidth(), getWindowHeight(), texFormat );
-		vk::transitionToFirstUse( mMainColorTex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, vk::context() );
+        // Textures
+        vk::Texture::Format texFormat = vk::Texture::Format( VK_FORMAT_R8G8B8A8_UNORM );
+        texFormat.setUsageColorAttachment();
+        mMainColorTex = vk::Texture::create( mWinSize.x, mWinSize.y, texFormat );
+        vk::transitionToFirstUse( mMainColorTex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, vk::context() );
 
-		// Render pass
-		ci::vk::RenderPass::Options renderPassOptions = ci::vk::RenderPass::Options()
-			.addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_R8G8B8A8_UNORM ).setSamples( sampleCount ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL ) )
-			.addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_D16_UNORM ).setSamples( sampleCount ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ) )
-			.addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_R8G8B8A8_UNORM ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL ) );
-		ci::vk::RenderPass::Subpass subpasses = ci::vk::RenderPass::Subpass()
-			.addColorAttachment( 0, 2 )
-			.addDepthStencilAttachment( 1 );
-		renderPassOptions.addSubPass( subpasses );
-		renderPassOptions.addSubpassSelfDependency( 0 );
-		mMainRenderPass = ci::vk::RenderPass::create( renderPassOptions );
+#if defined( MULTISAMPLE )
 
-		mMainRenderPass->setAttachmentClearValue( 0, { FOG_COLOR.r, FOG_COLOR.g, FOG_COLOR.b, 1.0 }  );
+        // Render pass
+        ci::vk::RenderPass::Options renderPassOptions = ci::vk::RenderPass::Options()
+            .addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_R8G8B8A8_UNORM ).setSamples( sampleCount ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL ) )
+            .addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_D16_UNORM ).setSamples( sampleCount ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ) )
+            .addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_R8G8B8A8_UNORM ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL ) );
+        ci::vk::RenderPass::Subpass subpasses = ci::vk::RenderPass::Subpass()
+            .addColorAttachment( 0, 2 )
+            .addDepthStencilAttachment( 1 );
+        renderPassOptions.addSubPass( subpasses );
+        renderPassOptions.addSubpassSelfDependency( 0 );
+        mMainRenderPass = ci::vk::RenderPass::create( renderPassOptions );
 
-		// Framebuffer
-		ci::vk::Framebuffer::Format framebufferFormat = ci::vk::Framebuffer::Format()
-			.addAttachment( ci::vk::Framebuffer::Attachment( VK_FORMAT_R8G8B8A8_UNORM, sampleCount ) )
-			.addAttachment( ci::vk::Framebuffer::Attachment( VK_FORMAT_D16_UNORM, sampleCount ) )
-			.addAttachment( ci::vk::Framebuffer::Attachment( mMainColorTex->getImageView() ) );
-		mMainFbo = ci::vk::Framebuffer::create( mMainRenderPass->getRenderPass(), getWindowSize(), framebufferFormat );
-	}
-	catch( const std::exception& e ) {
-		CI_LOG_E( "FBO ERROR: " << e.what() );
-	}
+        mMainRenderPass->setAttachmentClearValue( 0, { FOG_COLOR.r, FOG_COLOR.g, FOG_COLOR.b, 1.0 }  );
+
+        // Framebuffer
+        ci::vk::Framebuffer::Format framebufferFormat = ci::vk::Framebuffer::Format()
+            .addAttachment( ci::vk::Framebuffer::Attachment( VK_FORMAT_R8G8B8A8_UNORM, sampleCount ) )
+            .addAttachment( ci::vk::Framebuffer::Attachment( VK_FORMAT_D16_UNORM, sampleCount ) )
+            .addAttachment( ci::vk::Framebuffer::Attachment( mMainColorTex->getImageView() ) );
+        mMainFbo = ci::vk::Framebuffer::create( mMainRenderPass->getRenderPass(), mWinSize, framebufferFormat );
+
+#else
+
+        // Render pass
+        ci::vk::RenderPass::Options renderPassOptions = ci::vk::RenderPass::Options()
+            .addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_R8G8B8A8_UNORM ).setSamples( sampleCount ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL ) )
+            .addAttachment( ci::vk::RenderPass::Attachment( VK_FORMAT_D16_UNORM ).setSamples( sampleCount ).setInitialAndFinalLayout( VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ) );
+        ci::vk::RenderPass::Subpass subpasses = ci::vk::RenderPass::Subpass()
+            .addColorAttachment( 0 )
+            .addDepthStencilAttachment( 1 );
+        renderPassOptions.addSubPass( subpasses );
+        renderPassOptions.addSubpassSelfDependency( 0 );
+        mMainRenderPass = ci::vk::RenderPass::create( renderPassOptions );
+
+        mMainRenderPass->setAttachmentClearValue( 0, { FOG_COLOR.r, FOG_COLOR.g, FOG_COLOR.b, 1.0 }  );
+
+        // Framebuffer
+        ci::vk::Framebuffer::Format framebufferFormat = ci::vk::Framebuffer::Format()
+            .addAttachment( ci::vk::Framebuffer::Attachment( mMainColorTex->getImageView() ) )
+            .addAttachment( ci::vk::Framebuffer::Attachment( VK_FORMAT_D16_UNORM, sampleCount ) );
+        mMainFbo = ci::vk::Framebuffer::create( mMainRenderPass->getRenderPass(), mWinSize, framebufferFormat );
+
+#endif
+
+    }
+    catch( const std::exception& e ) {
+        CI_LOG_E( "FBO ERROR: " << e.what() );
+    }
 
 	mMainRenderPass->setAttachmentClearValue( 0, { FOG_COLOR.r, FOG_COLOR.g, FOG_COLOR.b, 1.0f } );
 
-	geom::Rect rect = geom::Rect( getWindowBounds(), true ).texCoords( vec2( 0, 0 ), vec2( 1, 0 ), vec2( 1, 1 ), vec2( 0, 1 ) );
+	geom::Rect rect = geom::Rect( Area( 0, 0, mWinSize.x, mWinSize.y ), true ).texCoords( vec2( 0, 0 ), vec2( 1, 0 ), vec2( 1, 1 ), vec2( 0, 1 ) );
 	mMainBatch = vk::Batch::create( rect, mMainShader );
 
 	vk::Texture::Format texFormat = vk::Texture::Format();
@@ -337,7 +375,7 @@ void FishTornadoApp::resize()
 {
 /*
 	mCamera.setAspectRatio( getWindowAspectRatio() );
-	mMainFbo = vk::Framebuffer::create( getWindowWidth(), getWindowHeight(), false );
+	mMainFbo = vk::Framebuffer::create( mWinSize.x, mWinSize.y, false );
 */
 }
 
@@ -528,7 +566,7 @@ void FishTornadoApp::generateCommandBuffer( const ci::vk::CommandBufferRef& cmdB
 		}
 
 		// Draw depth
-		drawToDepthFbo( cmdBuf );
+        drawToDepthFbo( cmdBuf );
 
 		// Draw to main render pass
 		drawToMainFbo( cmdBuf );
@@ -537,7 +575,7 @@ void FishTornadoApp::generateCommandBuffer( const ci::vk::CommandBufferRef& cmdB
 		vk::context()->getPresenter()->beginRender( cmdBuf, vk::context() );		
 		{
 			vk::ScopedMatrices pushMatrices;
-			vk::setMatricesWindow( getWindowSize() );
+			vk::setMatricesWindow( mWinSize );
 
 			mMainBatch->uniform( "uFboTex",					mMainColorTex );
 			mMainBatch->uniform( "uNoiseNormalsTex",		mNoiseNormalsTex );
@@ -547,11 +585,11 @@ void FishTornadoApp::generateCommandBuffer( const ci::vk::CommandBufferRef& cmdB
 			mMainBatch->uniform( "ciBlock1.uBrightness",	mBrightness );
 			mMainBatch->uniform( "ciBlock1.uBlend",			mBlend );
 			mMainBatch->uniform( "ciBlock1.uDistort",		mDistortion );
-			mMainBatch->uniform( "ciBlock1.uResolution",	vec2( getWindowWidth(), getWindowHeight() ) );
+			mMainBatch->uniform( "ciBlock1.uResolution",	vec2( mWinSize.x, mWinSize.y ) );
 
 			mMainBatch->draw();
 /*
-			vk::setMatricesWindow( getWindowSize() );
+			vk::setMatricesWindow( mWinSize );
 			//vk::color( Color( 1, 1, 1 ) );
 			vk::draw( mGpuFlocker->mVelocityTextures[0], Rectf( 0, 0, 400, 400 ) );
 			vk::draw( mGpuFlocker->mPositionTextures[0], Rectf( 0, 0, 400, 400 ) + vec2( 410,   0 ) );
@@ -561,9 +599,9 @@ void FishTornadoApp::generateCommandBuffer( const ci::vk::CommandBufferRef& cmdB
 
 /*
 			if( mLightLoaded ) {
-				vk::setMatricesWindow( getWindowSize() );
+				vk::setMatricesWindow( mWinSize );
 				//vk::color( 1.0f, 1.0f, 1.0f );
-				float size = 0.5f*std::min( getWindowWidth(), getWindowHeight() );
+				float size = 0.5f*std::min( mWinSize.x, mWinSize.y );
 				//vk::draw( mLight->getTexture(), Rectf( 0, 0, size, size ) ); 
 				vk::draw( mLight->getBlurredTexture(), Rectf( 0, 0, size, size ) + vec2( size + 10, 0 ) ); 
 			}
@@ -603,6 +641,9 @@ void FishTornadoApp::draw()
 
 	// Wait for work to be done
 	vk::context()->getGraphicsQueue()->waitIdle();
+
+    vkDestroySemaphore( vk::context()->getDevice(), imageAcquiredSemaphore, nullptr );
+    vkDestroySemaphore( vk::context()->getDevice(), renderingCompleteSemaphore, nullptr );
 
 	if( 0 == ( getElapsedFrames() % 300 ) ) {
 		console() << "FPS: " << getAverageFps() << std::endl;
@@ -659,7 +700,7 @@ const std::vector<std::string> gLayers = {
 CINDER_APP( 
 	FishTornadoApp, 
 	RendererVk( RendererVk::Options()
-		.setSamples( VK_SAMPLE_COUNT_8_BIT )
+        .setSamples( NUM_SAMPLES )
 		.setExplicitMode()
 		.setSecondaryQueueTypes( VK_QUEUE_GRAPHICS_BIT, NUM_ADDITIONAL_QUEUES )
 		.setAllocatorBlockSize( vk::Allocator::_64MB, vk::Allocator::_64MB )

@@ -90,7 +90,8 @@ class Renderer {
 	#endif
 	virtual CGContextRef	getCgContext() { throw; } // the default behavior is failure
 
-	virtual void	setFrameSize( int width, int height ) {}		
+	virtual void		setFrameSize( int width, int height ) {}
+	virtual bool		isMetalLayer() const { return false; }
 
 #elif defined( CINDER_MSW )
 	virtual void setup( HWND wnd, HDC dc, RendererRef sharedRenderer ) = 0;

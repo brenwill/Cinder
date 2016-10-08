@@ -133,7 +133,7 @@ Allocator::Allocation Allocator::PoolManager<VkObjectT>::Pool::allocate( const t
 		mAllocations.push_back( result );
 
 		// Move offset
-		mOffset += allocatedSize;
+        mOffset = alignedOffset + allocatedSize;
 	}
 
 	return result;
