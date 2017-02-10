@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://libcinder.org/static/images/notes/vulkan/Vulkan_Mar15.svg" alt="Vulkan Logo" width="256" height="auto"/>
+  <img src="https://moltengl.com/docs/images/Vulkan_100px_Dec16.png" alt="Vulkan Logo" width="256" height="auto"/>
 </p>
 
 Welcome to the experimental Vulkan implementation in Cinder.
