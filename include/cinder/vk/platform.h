@@ -55,12 +55,6 @@
 #define VK_PROTOTYPES
 #include <vulkan/vulkan.h>
 
-#if defined( VK_USE_PLATFORM_MACOS_MVK )
-	#include <MoltenVK/vk_mvk_macos_surface.h>
-#elif defined( VK_USE_PLATFORM_IOS_MVK )
-	#include <MoltenVK/vk_mvk_ios_surface.h>
-#endif
-
 #if defined( NDEBUG ) && defined( __GNUC__ )
 	#define U_ASSERT_ONLY __attribute__((unused))
 #else
