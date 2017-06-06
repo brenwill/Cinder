@@ -710,5 +710,6 @@ CINDER_APP(
 	[]( FishTornadoApp::Settings *settings ) {	
 		settings->setWindowSize( 1920, 1080 );
 		settings->setResizable( false );
-	} 
+		settings->setHighDensityDisplayEnabled(false);
+	}
 )
