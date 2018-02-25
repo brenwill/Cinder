@@ -226,11 +226,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0920;
-				TargetAttributes = {
-					00692BCE14FF149000D0A05E = {
-						DevelopmentTeam = VU3TCKU48B;
-					};
-				};
 			};
 			buildConfigurationList = 00692BC914FF149000D0A05E /* Build configuration list for PBXProject "FishTornado" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -348,7 +343,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = VU3TCKU48B;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../MoltenVK/iOS\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = FishTornado_Prefix.pch;
@@ -372,7 +367,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = VU3TCKU48B;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../MoltenVK/iOS\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = FishTornado_Prefix.pch;
