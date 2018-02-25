@@ -25,6 +25,7 @@
 		A9ACC6371D2D5F7E00991CB3 /* Shark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ACC6311D2D5F7E00991CB3 /* Shark.cpp */; };
 		A9ACC65B1D2D608E00991CB3 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ACC65A1D2D608E00991CB3 /* Metal.framework */; };
 		A9ACCA161D2D78BD00991CB3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = A9ACCA151D2D78BD00991CB3 /* assets */; };
+		A9B49E611F7C2F34000119AE /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B49E601F7C2F34000119AE /* IOSurface.framework */; };
 		C725DFFE121DAC7F00FA186B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02B121B400300192073 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		C725E001121DAC8F00FA186B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C725E000121DAC8F00FA186B /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		C725E001121DAC8FFFFA18FF /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091FFFF /* ImageIO.framework */; };
@@ -63,6 +64,7 @@
 		A9ACC6311D2D5F7E00991CB3 /* Shark.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shark.cpp; sourceTree = "<group>"; };
 		A9ACC65A1D2D608E00991CB3 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		A9ACCA151D2D78BD00991CB3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
+		A9B49E601F7C2F34000119AE /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		C725E000121DAC8F00FA186B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C727C02B121B400300192073 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C727C02D121B400300192073 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -77,6 +79,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9363CBE1D77B10D00596B06 /* MoltenVK.framework in Frameworks */,
+				A9B49E611F7C2F34000119AE /* IOSurface.framework in Frameworks */,
 				A9ACC65B1D2D608E00991CB3 /* Metal.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				C725E001121DAC8F00FA186B /* AVFoundation.framework in Frameworks */,
@@ -120,6 +123,7 @@
 		00692BD214FF149000D0A05E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A9B49E601F7C2F34000119AE /* IOSurface.framework */,
 				A9363CBD1D77B10D00596B06 /* MoltenVK.framework */,
 				A9ACC65A1D2D608E00991CB3 /* Metal.framework */,
 				C7FB19D5124BC0D70045AFD2 /* AudioToolbox.framework */,
@@ -221,6 +225,12 @@
 		00692BC614FF149000D0A05E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0920;
+				TargetAttributes = {
+					00692BCE14FF149000D0A05E = {
+						DevelopmentTeam = VU3TCKU48B;
+					};
+				};
 			};
 			buildConfigurationList = 00692BC914FF149000D0A05E /* Build configuration list for PBXProject "FishTornado" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -338,7 +348,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VU3TCKU48B;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../MoltenVK/iOS\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = FishTornado_Prefix.pch;
@@ -362,7 +372,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VU3TCKU48B;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../../MoltenVK/iOS\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = FishTornado_Prefix.pch;
