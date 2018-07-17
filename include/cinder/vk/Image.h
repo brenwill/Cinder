@@ -169,7 +169,7 @@ public:
 	VkSampleCountFlagBits	getSamples() const { return mFormat.mSamples; }
 	VkImageTiling			getTiling() const { return mFormat.mTiling; }
 	VkImageUsageFlags		getUsage() const { return mFormat.mUsage; }
-	VkMemoryPropertyFlags	getMemoryProperty() const { mFormat.mMemoryProperty; }
+	VkMemoryPropertyFlags	getMemoryProperty() const { return mFormat.mMemoryProperty; }
 
 	VkImageAspectFlags		getAspectMask() const { return mAspectMask; }
 

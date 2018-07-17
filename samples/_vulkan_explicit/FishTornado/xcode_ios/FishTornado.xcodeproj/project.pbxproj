@@ -25,7 +25,6 @@
 		A9ACC6371D2D5F7E00991CB3 /* Shark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ACC6311D2D5F7E00991CB3 /* Shark.cpp */; };
 		A9ACC65B1D2D608E00991CB3 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ACC65A1D2D608E00991CB3 /* Metal.framework */; };
 		A9ACCA161D2D78BD00991CB3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = A9ACCA151D2D78BD00991CB3 /* assets */; };
-		A9B49E611F7C2F34000119AE /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B49E601F7C2F34000119AE /* IOSurface.framework */; };
 		C725DFFE121DAC7F00FA186B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C727C02B121B400300192073 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		C725E001121DAC8F00FA186B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C725E000121DAC8F00FA186B /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		C725E001121DAC8FFFFA18FF /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CFDF6A1138442D0091FFFF /* ImageIO.framework */; };
@@ -79,7 +78,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9363CBE1D77B10D00596B06 /* MoltenVK.framework in Frameworks */,
-				A9B49E611F7C2F34000119AE /* IOSurface.framework in Frameworks */,
 				A9ACC65B1D2D608E00991CB3 /* Metal.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				C725E001121DAC8F00FA186B /* AVFoundation.framework in Frameworks */,
@@ -225,7 +223,7 @@
 		00692BC614FF149000D0A05E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0940;
 			};
 			buildConfigurationList = 00692BC914FF149000D0A05E /* Build configuration list for PBXProject "FishTornado" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -294,9 +292,9 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*]" = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(CINDER_PATH)/include\"",
 					"\"${CINDER_PATH}/tools/vulkan/include\"",
@@ -321,9 +319,8 @@
 				DEAD_CODE_STRIPPING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(CINDER_PATH)/include\"",
 					"\"${CINDER_PATH}/tools/vulkan/include\"",
