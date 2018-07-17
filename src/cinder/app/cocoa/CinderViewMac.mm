@@ -64,11 +64,9 @@ using namespace cinder::app;
 -(BOOL) wantsUpdateLayer { return mUseMetal; }
 
 // If the wantsLayer property is set to YES, this method will be invoked to return a layer instance.
+// Layer content scaling is handled elsewhere.
 -(CALayer *) makeBackingLayer {
-	CALayer * layer = [(mUseMetal ? [CAMetalLayer class] : [CALayer class]) layer];
-	CGSize viewScale = [self convertSizeToBacking: CGSizeMake( 1.0f, 1.0f )];
-	layer.contentsScale = MIN( viewScale.width, viewScale.height );
-	return layer;
+	return [(mUseMetal ? [CAMetalLayer class] : [CALayer class]) layer];
 }
 
 - (CinderViewMac *)initWithFrame:(NSRect)frame renderer:(RendererRef)renderer sharedRenderer:(RendererRef)sharedRenderer

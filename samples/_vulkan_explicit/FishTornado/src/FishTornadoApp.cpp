@@ -708,7 +708,7 @@ CINDER_APP(
 		.setDebugReportCallbackFn( debugReportVk ) 
 	), 
 	[]( FishTornadoApp::Settings *settings ) {	
-		settings->setWindowSize( 1920, 1080 );
+		settings->setWindowSize( 1280, 720 );
 		settings->setResizable( false );
 		settings->setHighDensityDisplayEnabled(false);
 	}
